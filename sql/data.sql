@@ -13,6 +13,8 @@
 -- M:N ilişki: analyst <-> digital_evidence (ara tablo: analysis_report)
 -- =====================================================================
 
+SET client_encoding = 'UTF8';
+
 DROP TABLE IF EXISTS analysis_report CASCADE;
 DROP TABLE IF EXISTS digital_evidence CASCADE;
 DROP TABLE IF EXISTS suspect CASCADE;
@@ -109,17 +111,17 @@ CREATE TABLE analysis_report (
 -- =====================================================================
 
 INSERT INTO analyst (badge_no, full_name, title, specialization, email, phone, hire_date) VALUES
-('SCL-1001', 'Elif Kaya',    'Kıdemli Uzman',     'Bellek Analizi',                'elif.kaya@siber.example',    '0500 000 00 01', '2018-03-12'),
+('SCL-1001', 'Elif Kaya',    'Kıdemli Uzman',    'Bellek Analizi',                'elif.kaya@siber.example',    '0500 000 00 01', '2018-03-12'),
 ('SCL-1002', 'Burak Yıldız',  'Dijital İncelemeci', 'Mobil İnceleme',                'burak.yildiz@siber.example',  '0500 000 00 02', '2020-09-01'),
-('SCL-1003', 'Selin Arslan',  'Kıdemli Uzman',     'Ağ Adli Bilişimi',              'selin.arslan@siber.example',  '0500 000 00 03', '2017-05-22'),
+('SCL-1003', 'Selin Arslan',  'Kıdemli Uzman',    'Ağ Adli Bilişimi',              'selin.arslan@siber.example',  '0500 000 00 03', '2017-05-22'),
 ('SCL-1004', 'Kerem Öztürk',  'Uzman Yardımcısı',  'Disk ve Dosya Sistemi Analizi', 'kerem.ozturk@siber.example',  NULL,             '2023-02-15');
 
 INSERT INTO lab_asset (asset_name, asset_type, model, serial_no, version, license_expiry, status) VALUES
 ('Tableau Yazma Engelleyici', 'cihaz',   'T8u',    'TBL-8841-A',  NULL,     NULL,         'bakımda'),
-('FTK Imager',                'yazılım', NULL,     'SW-FTK-001',  '4.7.1',  '2027-03-31', 'aktif'),
-('Autopsy',                   'yazılım', NULL,     'SW-AUT-002',  '4.21.0', NULL,         'aktif'),
-('Volatility 3',              'yazılım', NULL,     'SW-VOL-003',  '2.5.2',  NULL,         'aktif'),
-('Wireshark',                 'yazılım', NULL,     'SW-WSH-004',  '4.2.5',  NULL,         'aktif'),
+('FTK Imager',                'yazılım', NULL,    'SW-FTK-001',  '4.7.1',  '2027-03-31', 'aktif'),
+('Autopsy',                   'yazılım', NULL,    'SW-AUT-002',  '4.21.0', NULL,         'aktif'),
+('Volatility 3',              'yazılım', NULL,    'SW-VOL-003',  '2.5.2',  NULL,         'aktif'),
+('Wireshark',                 'yazılım', NULL,    'SW-WSH-004',  '4.2.5',  NULL,         'aktif'),
 ('Mobil Adli Bilişim Cihazı', 'cihaz',   'MAB-X1', 'DEV-MOB-777', NULL,     '2026-12-31', 'aktif');
 
 INSERT INTO case_file (case_no, title, crime_type, description, reported_at, status, priority, lead_analyst_id) VALUES
@@ -141,6 +143,7 @@ INSERT INTO case_file (case_no, title, crime_type, description, reported_at, sta
 ('VK-2026-006', 'Sahte e-ticaret sitesi', 'Nitelikli dolandırıcılık',
  'Ödeme alıp ürün göndermeyen sahte mağaza sitesi. Sorumlu analist henüz atanmadı.',
  '2026-10-20 13:05:00', 'açık', 3, NULL);
+
 
 INSERT INTO suspect (case_id, full_name, national_id, birth_date, status, notes) VALUES
 ((SELECT case_id FROM case_file WHERE case_no = 'VK-2026-001'), 'Ozan Çelik',   '10000000011', '1994-04-17', 'şüpheli', 'Sahte sayfanın alan adını satın aldığı iddia ediliyor.'),
@@ -192,6 +195,7 @@ INSERT INTO digital_evidence (evidence_no, case_id, suspect_id, evidence_type, d
  (SELECT suspect_id FROM suspect WHERE full_name = 'Merve Tunç'),
  'web sunucu imajı', 'Sahte mağaza sitesinin barındırıldığı sunucunun imajı.', NULL, 120.00,
  'aa9765146350713f44864b84f48975bed86b96e5374367d4be8964062fbfd2de', '2026-10-22 15:30:00', 'Hosting firması (talep üzerine)', 'depoda');
+
 
 INSERT INTO analysis_report (report_no, evidence_id, analyst_id, asset_id, analysis_type, started_at, finished_at, findings, result) VALUES
 ('RPR-2026-001', (SELECT evidence_id FROM digital_evidence WHERE evidence_no = 'KNT-2026-001-A'),
